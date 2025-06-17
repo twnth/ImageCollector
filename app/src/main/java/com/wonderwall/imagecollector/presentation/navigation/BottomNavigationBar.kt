@@ -23,7 +23,7 @@ internal fun BottomNavigationBar(
                 icon = {
                     Icon(
                         imageVector = screen.icon,
-                        contentDescription = screen.label
+                        contentDescription = screen.label,
                     )
                 },
 //                label = { Text(screen.label) }

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.wonderwall.imagecollector.presentation.MainViewModel
 import com.wonderwall.imagecollector.ui.theme.ImageCollectorTheme
+import com.wonderwall.imagecollector.ui.theme.component.ContentsListScreen
 import com.wonderwall.imagecollector.ui.theme.component.SearchBar
 
 

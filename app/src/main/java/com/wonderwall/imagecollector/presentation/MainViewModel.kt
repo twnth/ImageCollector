@@ -100,14 +100,14 @@ class MainViewModel @Inject constructor(
         val imageItems = handleApiResult(ContentsType.IMAGE, context, imageResult) {}
         val videoItems = handleApiResult(ContentsType.VIDEO, context, videoResult) {}
 
-        val favoriteIdxSet = galleryList.value.map { it.idx }.toSet()
+        val favoriteIdxSet = galleryList.value.map { it.thumbnailUrl }.toSet()
 
         val newItems = (imageItems + videoItems)
             .sortedByDescending { it.dateTime }
             .mapIndexed { index, item ->
                 item.copy(
                     idx = _combinedList.value.size + index,
-                    isFavorite = item.idx in favoriteIdxSet
+                    isFavorite = item.thumbnailUrl in favoriteIdxSet
                 )
             }
 

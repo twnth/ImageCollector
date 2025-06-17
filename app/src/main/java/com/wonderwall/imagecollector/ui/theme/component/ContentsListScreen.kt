@@ -1,4 +1,4 @@
-package com.wonderwall.imagecollector.presentation.search
+package com.wonderwall.imagecollector.ui.theme.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wonderwall.imagecollector.domain.model.ContentsItem
 import com.wonderwall.imagecollector.presentation.MainViewModel
-import com.wonderwall.imagecollector.ui.theme.component.ContentsItemCard
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -48,7 +47,7 @@ fun ContentsListScreen(
     }
 
     val favoriteIdxSet = remember(favoriteList.value) {
-        favoriteList.value.map { it.idx }.toSet()
+        favoriteList.value.map { it.thumbnailUrl }.toSet()
     }
 
     LazyVerticalGrid(
@@ -60,7 +59,7 @@ fun ContentsListScreen(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(currentList) { item ->
-            val isFavorite = favoriteIdxSet.contains(item.idx)
+            val isFavorite = favoriteIdxSet.contains(item.thumbnailUrl)
             ContentsItemCard(item.copy(isFavorite = isFavorite)) { selectedItem ->
                 if (isFavorite) {
                     viewModel.deleteToGallery(selectedItem)

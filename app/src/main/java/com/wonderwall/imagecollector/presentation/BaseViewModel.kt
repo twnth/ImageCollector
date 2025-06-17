@@ -24,7 +24,6 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
             is ApiResult.Success -> {
                 onSuccess(result.data)
                 result.data.documents.map {
-                    Log.d(Constants.TAG, "handleApiResult: ${it.thumbnail} / ${it.thumbnailUrl}")
                     ContentsItem(
                         thumbnailUrl = if (type == ContentsType.IMAGE) it.thumbnailUrl else it.thumbnail,
                         dateTime = it.datetime,
