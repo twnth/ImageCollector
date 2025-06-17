@@ -11,9 +11,12 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -23,12 +26,27 @@ import com.wonderwall.imagecollector.core.Constants
 import com.wonderwall.imagecollector.core.parseToLocalDateTimeWithOffset
 import com.wonderwall.imagecollector.domain.model.ContentsItem
 import com.wonderwall.imagecollector.presentation.MainViewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun ContentsListScreen(viewModel: MainViewModel) {
     val list = viewModel.combinedList.collectAsState()
+    val gridState = rememberLazyGridState()
+
+    LaunchedEffect(gridState) {
+        snapshotFlow { gridState.layoutInfo }
+            .map { it.visibleItemsInfo.lastOrNull()?.index }
+            .distinctUntilChanged()
+            .collect { lastVisibleIndex ->
+                if (lastVisibleIndex != null && lastVisibleIndex >= list.value.size - 10) {
+                    viewModel.searchNextPage()
+                }
+            }
+    }
 
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(8.dp),
@@ -56,6 +74,10 @@ fun ContentsItemCard(item: ContentsItem, onClick: (Int) -> Unit) {
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
+//        Text(
+//            modifier = Modifier.align(Alignment.TopStart),
+//            text = item.type.name
+//        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Text(
                 modifier = Modifier.align(Alignment.BottomCenter),

@@ -15,7 +15,7 @@ class KakaoApiUseCase @Inject constructor(
         size: Int? = null
     ): ApiResult<KakaoBaseResponse>? {
         return callApi {
-            repository.getImageList(keyword)
+            repository.getImageList(keyword = keyword, size = size, page = page)
         }
     }
 
@@ -26,7 +26,7 @@ class KakaoApiUseCase @Inject constructor(
         size: Int? = null
     ): ApiResult<KakaoBaseResponse>? {
         return callApi {
-            repository.getVideoList(keyword)
+            repository.getVideoList(keyword = keyword, size = size, page = page)
         }
     }
 }

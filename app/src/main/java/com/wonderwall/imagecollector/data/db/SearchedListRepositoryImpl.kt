@@ -8,7 +8,10 @@ import javax.inject.Inject
 
 class SearchedListRepositoryImpl @Inject constructor(
     private val dao: SearchedListDao,
-): SearchedListRepository {
+) : SearchedListRepository {
+    private val gson = Gson()
+    private val type = object : TypeToken<List<ContentsItem>>() {}.type
+
     override suspend fun getSearchedList(keyword: String): List<ContentsItem>? {
         val now = System.currentTimeMillis()
         // 키워드 별 캐싱 데이터 확인
@@ -18,7 +21,6 @@ class SearchedListRepositoryImpl @Inject constructor(
         val isCacheValid = cache != null && (now - cache.cachedAt < 5 * 60 * 1000)
 
         return if (isCacheValid) {
-            val type = object : TypeToken<List<ContentsItem>>() {}.type
             return Gson().fromJson(cache.data, type)
         } else {
             null
@@ -29,13 +31,14 @@ class SearchedListRepositoryImpl @Inject constructor(
         keyword: String,
         list: List<ContentsItem>
     ) {
-        val json = Gson().toJson(list)
-        val now = System.currentTimeMillis()
+        val old = getSearchedList(keyword) ?: emptyList()
+        val merged = (old + list).distinctBy { it.idx } // 중복 제거 (idx 기준)
+        val json = Gson().toJson(merged)
         dao.insertCache(
             SearchedListEntity(
                 keyword = keyword,
                 data = json,
-                cachedAt = now
+                cachedAt = System.currentTimeMillis()
             )
         )
     }

@@ -2,7 +2,6 @@ package com.wonderwall.imagecollector.presentation
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.wonderwall.imagecollector.data.KakaoBaseResponse
 import com.wonderwall.imagecollector.domain.model.ContentsItem
 import com.wonderwall.imagecollector.domain.model.ContentsType
 import com.wonderwall.imagecollector.domain.usecase.KakaoApiUseCase
@@ -21,16 +20,15 @@ class MainViewModel @Inject constructor(
     private val kakaoApiUseCase: KakaoApiUseCase,
     private val searchedListUseCase: SearchedListUseCase,
 ) : BaseViewModel() {
+    companion object {
+        private const val PAGE_SIZE = 30
+    }
+    private var currentPage = 1
+    private var isLoading = false
+    private var lastSearchedKeyword = ""
+
     private var _keyword: MutableStateFlow<String> = MutableStateFlow("")
     val keyword = _keyword.asStateFlow()
-
-    private var _imageList: MutableStateFlow<KakaoBaseResponse> =
-        MutableStateFlow(KakaoBaseResponse())
-    val imageList = _imageList.asStateFlow()
-
-    private var _videoList: MutableStateFlow<KakaoBaseResponse> =
-        MutableStateFlow(KakaoBaseResponse())
-    val videoList = _videoList.asStateFlow()
 
     private val _combinedList = MutableStateFlow<List<ContentsItem>>(emptyList())
     val combinedList = _combinedList.asStateFlow()
@@ -39,18 +37,39 @@ class MainViewModel @Inject constructor(
         _keyword.value = keyword
     }
 
-    fun setData(keyword: String) = viewModelScope.launch {
+    fun setInitialData() = viewModelScope.launch {
+        val keyword = keyword.value
         val cachedData = getCachedData(keyword)
-        if (cachedData !== null) {
+
+        if (!cachedData.isNullOrEmpty()) {
             _combinedList.value = cachedData
-            return@launch
+            lastSearchedKeyword = keyword
+            currentPage = (cachedData.size / PAGE_SIZE) + 1
+        } else {
+            _combinedList.value = emptyList()
+            currentPage = 1
+            lastSearchedKeyword = ""
+            search()
         }
-        search(keyword)
     }
 
-    private fun search(keyword: String) = viewModelScope.launch {
-        val imageDeferred = async { kakaoApiUseCase.getImageList(keyword) }
-        val videoDeferred = async { kakaoApiUseCase.getVideoList(keyword) }
+    fun searchNextPage() {
+        if (!isLoading) {
+            search()
+        }
+    }
+    fun search() = viewModelScope.launch {
+        isLoading = true
+        val keyword = keyword.value
+        if (lastSearchedKeyword != keyword) {
+            currentPage = 1
+            _combinedList.value = emptyList()
+        }
+
+        val imageDeferred =
+            async { kakaoApiUseCase.getImageList(keyword = keyword, size = PAGE_SIZE, page = currentPage) }
+        val videoDeferred =
+            async { kakaoApiUseCase.getVideoList(keyword = keyword, size = PAGE_SIZE, page = currentPage) }
 
         val imageResult = imageDeferred.await()
         val videoResult = videoDeferred.await()
@@ -58,34 +77,24 @@ class MainViewModel @Inject constructor(
         val imageItems = handleApiResult(ContentsType.IMAGE, context, imageResult) {}
         val videoItems = handleApiResult(ContentsType.VIDEO, context, videoResult) {}
 
-        val mergedList = (imageItems + videoItems)
+        val newItems = (imageItems + videoItems)
             .sortedByDescending { it.dateTime }
-            .mapIndexed { index, item -> // 보관함 식별 위한 idx 추가
-                item.copy(idx = index)
+            .mapIndexed { index, item ->
+                item.copy(idx = _combinedList.value.size + index)
             }
-        searchedListUseCase.saveCache(keyword, mergedList)
-        _combinedList.value = mergedList
+
+        val merged = _combinedList.value + newItems
+        _combinedList.value = merged
+
+        searchedListUseCase.saveCache(keyword, merged)
+
+        lastSearchedKeyword = keyword
+        currentPage++
+        isLoading = false
     }
 
     private suspend fun getCachedData(keyword: String): List<ContentsItem>? {
         val cached = searchedListUseCase.getSearchedList(keyword)
-        if (cached != null) {
-            return cached.mapIndexed { index, item -> item.copy(idx = index) }
-        }
-        return null
-    }
-
-    private fun searchImage(keyword: String) = viewModelScope.launch {
-        val result = kakaoApiUseCase.getImageList(keyword)
-        handleApiResult(ContentsType.IMAGE, context, result) {
-            _imageList.value = it
-        }
-    }
-
-    private fun searchVideo(keyword: String) = viewModelScope.launch {
-        val result = kakaoApiUseCase.getVideoList(keyword)
-        handleApiResult(ContentsType.VIDEO, context, result) {
-            _videoList.value = it
-        }
+        return cached?.mapIndexed { index, item -> item.copy(idx = index) }
     }
 }
