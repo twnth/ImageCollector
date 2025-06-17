@@ -27,6 +27,7 @@ fun SearchScreen(
     viewModel: MainViewModel
 ) {
     val keyword by viewModel.keyword.collectAsState()
+
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.padding(it)) {
             Column {
@@ -35,9 +36,10 @@ fun SearchScreen(
                     onKeywordChange = { viewModel.setKeyword(it) },
                     onSearch = {
                         Log.d(TAG, "SearchScreen: $it")
-                        viewModel.search(keyword)
+                        viewModel.setData(keyword)
                     }
                 )
+                ContentsListScreen(viewModel)
             }
         }
     }

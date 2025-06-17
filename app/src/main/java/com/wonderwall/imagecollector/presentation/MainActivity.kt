@@ -60,7 +60,6 @@ fun ImageCollectorApp(viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize(),
         bottomBar = {
-            // BottomNavigation 추가
             BottomNavigationBar(
                 items = routes,
                 currentRoute = currentRoute,

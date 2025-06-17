@@ -15,6 +15,8 @@ data class Document(
     val height: Int,
     @SerializedName("image_url")
     val imageUrl: String,
+    @SerializedName("thumbnail")
+    val thumbnail: String,
     @SerializedName("thumbnail_url")
     val thumbnailUrl: String,
     @SerializedName("width")
