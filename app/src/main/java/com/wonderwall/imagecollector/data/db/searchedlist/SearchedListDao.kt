@@ -1,4 +1,4 @@
-package com.wonderwall.imagecollector.data.db
+package com.wonderwall.imagecollector.data.db.searchedlist
 
 import androidx.room.Dao
 import androidx.room.Insert

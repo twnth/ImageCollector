@@ -1,4 +1,4 @@
-package com.wonderwall.imagecollector.data.db
+package com.wonderwall.imagecollector.data.db.searchedlist
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -9,7 +9,6 @@ import javax.inject.Inject
 class SearchedListRepositoryImpl @Inject constructor(
     private val dao: SearchedListDao,
 ) : SearchedListRepository {
-    private val gson = Gson()
     private val type = object : TypeToken<List<ContentsItem>>() {}.type
 
     override suspend fun getSearchedList(keyword: String): List<ContentsItem>? {

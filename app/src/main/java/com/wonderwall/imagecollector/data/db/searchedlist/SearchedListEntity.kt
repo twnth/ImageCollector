@@ -1,4 +1,4 @@
-package com.wonderwall.imagecollector.data.db
+package com.wonderwall.imagecollector.data.db.searchedlist
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

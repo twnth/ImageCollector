@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.wonderwall.imagecollector.presentation.MainViewModel
+import com.wonderwall.imagecollector.presentation.gallery.GalleryScreen
 import com.wonderwall.imagecollector.presentation.search.SearchScreen
 
 @Composable
@@ -15,7 +16,7 @@ internal fun NavigationGraph(
     NavHost(navController, startDestination = "search") {
         composable("search") { SearchScreen(mainViewModel) }
         composable("gallery") { backStackEntry ->
-
+            GalleryScreen(mainViewModel)
         }
     }
 }

@@ -2,6 +2,8 @@ package com.wonderwall.imagecollector.data.db
 
 import android.content.Context
 import androidx.room.Room
+import com.wonderwall.imagecollector.data.db.gallery.GalleryDao
+import com.wonderwall.imagecollector.data.db.searchedlist.SearchedListDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +27,10 @@ object RoomModule {
     @Provides
     fun provideSearchedListDao(db: ICDatabase): SearchedListDao {
         return db.searchedListDao()
+    }
+
+    @Provides
+    fun provideGalleryDao(db: ICDatabase): GalleryDao {
+        return db.galleryDao()
     }
 }
