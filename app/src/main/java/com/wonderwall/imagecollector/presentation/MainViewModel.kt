@@ -123,7 +123,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getGalleryList() = viewModelScope.launch {
-        _galleryList.value = galleryUseCase.getAll()
+        _galleryList.value = galleryUseCase.getAll().sortedByDescending { it.dateTime }
     }
 
     fun saveToGallery(item: ContentsItem) = viewModelScope.launch {
