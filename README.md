@@ -48,3 +48,11 @@ https://github.com/twnth/ImageCollector.git
 │   │   ├── 📂 theme            # Material3 기반 테마 구성
 │   │   └── 📂 component        # 재사용 가능한 컴포넌트
 └── build.gradle               # Gradle 설정
+```
+
+--- 
+
+## 👨‍💻 개발자
+멋쟁이 이영훈 (Younghun Lee)	
+
+📧 Contact: twnthbb@gmail.com
