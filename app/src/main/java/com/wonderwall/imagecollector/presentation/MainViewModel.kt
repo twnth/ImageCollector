@@ -123,7 +123,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun getGalleryList() = viewModelScope.launch {
-//        _galleryList.value = galleryUseCase.getAll().sortedByDescending { it.regDate }
         _galleryList.value = galleryUseCase.getAll()
     }
 

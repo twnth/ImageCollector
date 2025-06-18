@@ -27,6 +27,7 @@ fun NavigationPager(viewModel: MainViewModel) {
 
     val pages = listOf("검색", "보관함")
 
+    // HorizontalPager로 좌우 슬라이드 / BottomNavigation 기능 다 가능하게 구현
     Scaffold(
         bottomBar = {
             NavigationBar {
