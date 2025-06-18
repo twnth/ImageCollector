@@ -1,7 +1,6 @@
 package com.wonderwall.imagecollector.presentation.navigation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,11 +19,9 @@ internal fun NavigationGraph(
     NavHost(
         navController,
         startDestination = "search",
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier.background(Color.Black)
     ) {
         composable("search") { SearchScreen(mainViewModel) }
-        composable("gallery") { backStackEntry ->
-            GalleryScreen(mainViewModel)
-        }
+        composable("gallery") { GalleryScreen(mainViewModel) }
     }
 }
