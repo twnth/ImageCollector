@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.wonderwall.imagecollector.presentation.navigation.BottomNavigationBar
 import com.wonderwall.imagecollector.presentation.navigation.NavigationGraph
+import com.wonderwall.imagecollector.presentation.navigation.NavigationPager
 import com.wonderwall.imagecollector.ui.theme.ImageCollectorTheme
 import com.wonderwall.imagecollector.ui.theme.component.MyBottomNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,31 +50,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun ImageCollectorApp(viewModel: MainViewModel) {
-    val navController = rememberNavController()
-
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        bottomBar = {
-//            BottomNavigationBar(navController = navController) { }
-            MyBottomNavigation(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                containerColor = Color.Black,
-                contentColor = Color.Black,
-                navController = navController
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            NavigationGraph(navController, viewModel)
-        }
-    }
+    NavigationPager(viewModel)
 }
 
 @Preview(showBackground = true)

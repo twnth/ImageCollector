@@ -5,7 +5,14 @@ import com.wonderwall.imagecollector.domain.model.ContentsItem
 import com.wonderwall.imagecollector.domain.model.ContentsType
 
 fun ContentsItem.toEntity(): GalleryEntity =
-    GalleryEntity(idx, thumbnailUrl.toString(), dateTime, type.name)
+    GalleryEntity(idx, thumbnailUrl.toString(), dateTime, type.name, regDate)
 
 fun GalleryEntity.toDomain(): ContentsItem =
-    ContentsItem(idx, thumbnailUrl, dateTime, isFavorite = false, ContentsType.valueOf(type))
+    ContentsItem(
+        idx,
+        thumbnailUrl,
+        dateTime,
+        isFavorite = false,
+        ContentsType.valueOf(type),
+        regDate
+    )

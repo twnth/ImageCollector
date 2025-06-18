@@ -5,5 +5,6 @@ data class ContentsItem(
     val thumbnailUrl: String? = "",
     val dateTime: String = "",
     val isFavorite: Boolean = false,
-    val type: ContentsType = ContentsType.IMAGE
+    val type: ContentsType = ContentsType.IMAGE,
+    val regDate: Long? = 0L,
 )

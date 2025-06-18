@@ -123,11 +123,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun getGalleryList() = viewModelScope.launch {
-        _galleryList.value = galleryUseCase.getAll().sortedByDescending { it.dateTime }
+//        _galleryList.value = galleryUseCase.getAll().sortedByDescending { it.regDate }
+        _galleryList.value = galleryUseCase.getAll()
     }
 
     fun saveToGallery(item: ContentsItem) = viewModelScope.launch {
-        galleryUseCase.save(item)
+        val newItem = item.copy(
+            regDate = System.currentTimeMillis()
+        )
+        galleryUseCase.save(newItem)
         getGalleryList()
     }
 

@@ -11,7 +11,7 @@ interface GalleryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(content: GalleryEntity)
 
-    @Query("SELECT * FROM gallery_list ORDER BY idx ASC")
+    @Query("SELECT * FROM gallery_list ORDER BY regDate ASC")
     suspend fun getAll(): List<GalleryEntity>
 
     @Delete

@@ -71,4 +71,6 @@ dependencies {
     implementation(libs.room.ktx)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.room.compiler)
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
 }

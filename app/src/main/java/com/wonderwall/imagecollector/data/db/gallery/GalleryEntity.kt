@@ -8,5 +8,6 @@ data class GalleryEntity(
     @PrimaryKey val idx: Int,
     val thumbnailUrl: String,
     val dateTime: String,
-    val type: String
+    val type: String,
+    val regDate: Long?,
 )
